@@ -12,13 +12,13 @@ public class ReservaRepository {
 
     private final List<ReservaDTO> baseDeDatos = new ArrayList<>();
 
-    // Crear o guardar una reserva
+
     public ReservaDTO save(ReservaDTO reserva) {
         baseDeDatos.add(reserva);
         return reserva;
     }
 
-    // Buscar por ID
+
     public ReservaDTO findById(String id) {
         for (ReservaDTO reserva : baseDeDatos) {
             if (reserva.getId().equals(id)) {
@@ -28,17 +28,17 @@ public class ReservaRepository {
         return null;
     }
 
-    // Obtener todas
+
     public List<ReservaDTO> findAll() {
         return new ArrayList<>(baseDeDatos);
     }
 
-    // Eliminar por ID
+
     public void deleteById(String id) {
         baseDeDatos.removeIf(reserva -> reserva.getId().equals(id));
     }
 
-    // Actualizar reserva
+
     public ReservaDTO update(ReservaDTO reserva) {
         for (int i = 0; i < baseDeDatos.size(); i++) {
             if (baseDeDatos.get(i).getId().equals(reserva.getId())) {
@@ -49,7 +49,7 @@ public class ReservaRepository {
         return null;
     }
 
-    // ----------- Métodos específicos ------------
+
 
     public List<ReservaDTO> findByUsuario(String usuario) {
         List<ReservaDTO> resultado = new ArrayList<>();
@@ -93,7 +93,7 @@ public class ReservaRepository {
         return resultado;
     }
 
-    // ----------- Utilitarios ------------
+
 
     public boolean existsById(String id) {
         return findById(id) != null;

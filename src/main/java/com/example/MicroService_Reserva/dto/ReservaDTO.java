@@ -1,22 +1,25 @@
 package com.example.MicroService_Reserva.dto;
 
+import java.time.LocalDate;
+
 public class ReservaDTO {
     private String id;
-    private String usuario;       // Nombre del pasajero o usuario
-    private String vuelo;         // Código de vuelo (ej: AV123)
-    private String origen;        // Ciudad de origen
-    private String destino;       // Ciudad de destino
-    private String precio;        // Precio del tiquete
-    private String estado;        // PENDIENTE, CONFIRMADA, CANCELADA
-    private String fechaVuelo;    // Fecha y hora del vuelo
-    private String asiento;       // Número de asiento
+    private String usuario;
+    private String vuelo;
+    private String origen;
+    private String destino;
+    private String precio;
+    private String estado;
+    private LocalDate fechaVueloInicio;
+    private LocalDate fechaVueloFinal;
+    private String asiento;
 
-    // Constructor vacío
+
     public ReservaDTO() {}
 
-    // Constructor con parámetros
+
     public ReservaDTO(String id, String usuario, String vuelo, String origen, String destino,
-                      String precio, String estado, String fechaVuelo, String asiento) {
+                      String precio, String estado, LocalDate fechaVueloInicio,LocalDate fechaVueloFinal, String asiento) {
         this.id = id;
         this.usuario = usuario;
         this.vuelo = vuelo;
@@ -24,11 +27,12 @@ public class ReservaDTO {
         this.destino = destino;
         this.precio = precio;
         this.estado = estado;
-        this.fechaVuelo = fechaVuelo;
+        this.fechaVueloInicio = fechaVueloInicio;
+        this.fechaVueloFinal = fechaVueloFinal;
         this.asiento = asiento;
     }
 
-    // Getters y Setters
+
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -50,9 +54,11 @@ public class ReservaDTO {
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
 
-    public String getFechaVuelo() { return fechaVuelo; }
-    public void setFechaVuelo(String fechaVuelo) { this.fechaVuelo = fechaVuelo; }
+    public LocalDate getFechaVuelo() { return fechaVueloInicio; }
+    public void setFechaVuelo(LocalDate fechaVuelo) { this.fechaVueloInicio = fechaVuelo; }
 
+    public LocalDate getFechaVueloFinal() { return fechaVueloFinal; }
+    public void setFechaVueloFinal(LocalDate fechaVuelo) { this.fechaVueloFinal = fechaVuelo; }
     public String getAsiento() { return asiento; }
     public void setAsiento(String asiento) { this.asiento = asiento; }
 
@@ -66,7 +72,7 @@ public class ReservaDTO {
                 ", destino='" + destino + '\'' +
                 ", precio='" + precio + '\'' +
                 ", estado='" + estado + '\'' +
-                ", fechaVuelo='" + fechaVuelo + '\'' +
+                ", fechaVuelo='" + fechaVueloInicio + '\'' +
                 ", asiento='" + asiento + '\'' +
                 '}';
     }

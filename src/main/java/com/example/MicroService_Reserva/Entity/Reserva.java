@@ -41,6 +41,9 @@ public class Reserva {
     @Column(name = "fecha_vuelo", nullable = false)
     private LocalDateTime fechaVuelo; // Fecha y hora del vuelo
 
+    @Column(name = "fecha_vuelo_Final", nullable = false)
+    private LocalDateTime fechaVueloFinal;
+
     @Column(nullable = false)
     private String asiento;   // Número de asiento
 
