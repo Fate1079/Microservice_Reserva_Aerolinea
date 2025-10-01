@@ -1,4 +1,4 @@
-package com.example.MicroService_Reserva.Entity;
+package com.example.MicroService_Reserva.persistencia.Entity;
 
 public enum EstadoReserva {
     PENDIENTE,

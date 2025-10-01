@@ -1,8 +1,9 @@
-package com.example.MicroService_Reserva.controller;
+package com.example.MicroService_Reserva.persistencia.controller;
 
-
-import com.example.MicroService_Reserva.dto.ReservaDTO;
-import com.example.MicroService_Reserva.service.ReservaService;
+import com.example.MicroService_Reserva.domain.dto.ReservaDTO;
+import com.example.MicroService_Reserva.persistencia.Entity.EstadoReserva;
+import com.example.MicroService_Reserva.persistencia.Entity.Reserva;
+import com.example.MicroService_Reserva.persistencia.service.ReservaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,13 +28,15 @@ public class ReservaController {
         this.reservaService = reservaService;
     }
 
+    // ----------- CRUD PRINCIPAL -----------
+
     @GetMapping
     @Operation(summary = "Obtener todas las reservas", description = "Devuelve una lista de todas las reservas registradas.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Reservas obtenidas con éxito"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
-    public ResponseEntity<List<ReservaDTO>> getAllReservas() {
+    public ResponseEntity<List<Reserva>> getAllReservas() {
         return ResponseEntity.ok(reservaService.findAll());
     }
 
@@ -43,38 +46,22 @@ public class ReservaController {
             @ApiResponse(responseCode = "200", description = "Reserva encontrada"),
             @ApiResponse(responseCode = "404", description = "Reserva no encontrada")
     })
-    public ResponseEntity<ReservaDTO> getReservaById(
-            @PathVariable @Parameter(description = "ID de la reserva") String id) {
-        ReservaDTO reserva = reservaService.findById(id);
-        return reserva != null ? ResponseEntity.ok(reserva) : ResponseEntity.notFound().build();
+    public ResponseEntity<Reserva> getReservaById(
+            @PathVariable @Parameter(description = "ID de la reserva") Long id) {
+        Reserva reserva = reservaService.findById(id);
+        return ResponseEntity.ok(reserva);
     }
 
     @PostMapping
-    @Operation(summary = "Guardar una reserva personalizada")
+    @Operation(summary = "Guardar una nueva reserva")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Reserva creada exitosamente"),
             @ApiResponse(responseCode = "400", description = "Datos inválidos")
     })
-    public ResponseEntity<ReservaDTO> guardarReserva(
+    public ResponseEntity<Reserva> guardarReserva(
             @RequestBody @Parameter(description = "Datos de la reserva a guardar") ReservaDTO reserva) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(reservaService.save(reserva));
-    }
-
-    @PutMapping("/{id}")
-    @Operation(summary = "Actualizar una reserva")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Reserva actualizada exitosamente"),
-            @ApiResponse(responseCode = "404", description = "Reserva no encontrada")
-    })
-    public ResponseEntity<ReservaDTO> actualizarReserva(
-            @PathVariable @Parameter(description = "ID de la reserva") String id,
-            @RequestBody @Parameter(description = "Datos de la reserva actualizados") ReservaDTO reserva) {
-        if (!reservaService.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        reserva.setId(id);
-        ReservaDTO actualizada = reservaService.update(reserva);
-        return ResponseEntity.ok(actualizada);
+        Reserva creada = reservaService.save(reserva);
+        return ResponseEntity.status(HttpStatus.CREATED).body(creada);
     }
 
     @DeleteMapping("/{id}")
@@ -84,42 +71,35 @@ public class ReservaController {
             @ApiResponse(responseCode = "404", description = "Reserva no encontrada")
     })
     public ResponseEntity<Void> eliminarReserva(
-            @PathVariable @Parameter(description = "ID de la reserva") String id) {
-        if (!reservaService.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
+            @PathVariable @Parameter(description = "ID de la reserva") Long id) {
         reservaService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
+    // ----------- BÚSQUEDAS -----------
+
     @GetMapping("/buscar/usuario")
     @Operation(summary = "Buscar reservas por usuario")
-    public ResponseEntity<List<ReservaDTO>> buscarPorUsuario(
+    public ResponseEntity<List<Reserva>> buscarPorUsuario(
             @RequestParam @Parameter(description = "Nombre del usuario") String usuario) {
         return ResponseEntity.ok(reservaService.buscarPorUsuario(usuario));
     }
 
     @GetMapping("/buscar/estado")
     @Operation(summary = "Buscar reservas por estado")
-    public ResponseEntity<List<ReservaDTO>> buscarPorEstado(
+    public ResponseEntity<List<Reserva>> buscarPorEstado(
             @RequestParam @Parameter(description = "Estado de la reserva") String estado) {
-        return ResponseEntity.ok(reservaService.buscarPorEstado(estado));
+        return ResponseEntity.ok(reservaService.buscarPorEstado(String.valueOf(EstadoReserva.valueOf(estado.toUpperCase()))));
     }
 
     @GetMapping("/buscar/vuelo")
     @Operation(summary = "Buscar reservas por código de vuelo")
-    public ResponseEntity<List<ReservaDTO>> buscarPorVuelo(
+    public ResponseEntity<List<Reserva>> buscarPorVuelo(
             @RequestParam @Parameter(description = "Código del vuelo") String vuelo) {
         return ResponseEntity.ok(reservaService.buscarPorVuelo(vuelo));
     }
 
-    @GetMapping("/buscar/ruta")
-    @Operation(summary = "Buscar reservas por origen y destino")
-    public ResponseEntity<List<ReservaDTO>> buscarPorOrigenDestino(
-            @RequestParam @Parameter(description = "Ciudad de origen") String origen,
-            @RequestParam @Parameter(description = "Ciudad de destino") String destino) {
-        return ResponseEntity.ok(reservaService.buscarPorOrigenDestino(origen, destino));
-    }
+    // ----------- ESTADÍSTICAS -----------
 
     @GetMapping("/contar")
     @Operation(summary = "Contar total de reservas")
@@ -129,8 +109,8 @@ public class ReservaController {
 
     @GetMapping("/contar/estado")
     @Operation(summary = "Contar reservas por estado")
-    public ResponseEntity<Long> contarPorEstado(
+    public ResponseEntity<List<Reserva>> contarPorEstado(
             @RequestParam @Parameter(description = "Estado de la reserva") String estado) {
-        return ResponseEntity.ok(reservaService.countByEstado(estado));
+        return ResponseEntity.ok(reservaService.buscarPorEstado(String.valueOf(EstadoReserva.valueOf(estado.toUpperCase()))));
     }
 }
