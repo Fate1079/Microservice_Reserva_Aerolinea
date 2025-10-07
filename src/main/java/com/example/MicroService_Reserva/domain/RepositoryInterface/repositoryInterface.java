@@ -3,15 +3,14 @@ package com.example.MicroService_Reserva.domain.RepositoryInterface;
 import com.example.MicroService_Reserva.domain.dto.ReservaDTO;
 
 import java.util.Optional;
+import java.util.List;
 
 public interface repositoryInterface {
 
 
-    Iterable<ReservaDTO> findAll();
+    List<ReservaDTO> findAll();
 
     // Consultar por ID
-    Optional<ReservaDTO> findById(Long id);
-
     Optional<ReservaDTO> findById(String id);
 
     // Guardar
@@ -21,13 +20,9 @@ public interface repositoryInterface {
     ReservaDTO update(ReservaDTO reservaDTO);
 
     // Eliminar
-    void delete(Long id);
-
-    // Validar si existe por ID
-    boolean existsById(Long id);
-
     void delete(String id);
 
+    // Validar si existe por ID
     boolean existsById(String id);
 
     // Contar todos los registros
@@ -38,4 +33,7 @@ public interface repositoryInterface {
 
     // Consultar por vuelo
     Optional<ReservaDTO> findByVuelo(String vuelo);
+
+    // Consultar por estado
+    
 }

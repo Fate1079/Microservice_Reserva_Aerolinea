@@ -1,7 +1,6 @@
 package com.example.MicroService_Reserva.persistencia.controller;
 
 import com.example.MicroService_Reserva.domain.dto.ReservaDTO;
-import com.example.MicroService_Reserva.persistencia.Entity.EstadoReserva;
 import com.example.MicroService_Reserva.persistencia.Entity.Reserva;
 import com.example.MicroService_Reserva.persistencia.service.ReservaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,7 +46,7 @@ public class ReservaController {
             @ApiResponse(responseCode = "404", description = "Reserva no encontrada")
     })
     public ResponseEntity<Reserva> getReservaById(
-            @PathVariable @Parameter(description = "ID de la reserva") Long id) {
+            @PathVariable @Parameter(description = "ID de la reserva") String id) {
         Reserva reserva = reservaService.findById(id);
         return ResponseEntity.ok(reserva);
     }
@@ -71,7 +70,7 @@ public class ReservaController {
             @ApiResponse(responseCode = "404", description = "Reserva no encontrada")
     })
     public ResponseEntity<Void> eliminarReserva(
-            @PathVariable @Parameter(description = "ID de la reserva") Long id) {
+            @PathVariable @Parameter(description = "ID de la reserva") String id) {
         reservaService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
@@ -89,7 +88,7 @@ public class ReservaController {
     @Operation(summary = "Buscar reservas por estado")
     public ResponseEntity<List<Reserva>> buscarPorEstado(
             @RequestParam @Parameter(description = "Estado de la reserva") String estado) {
-        return ResponseEntity.ok(reservaService.buscarPorEstado(String.valueOf(EstadoReserva.valueOf(estado.toUpperCase()))));
+        return ResponseEntity.ok(reservaService.buscarPorEstado(estado));
     }
 
     @GetMapping("/buscar/vuelo")
@@ -109,8 +108,8 @@ public class ReservaController {
 
     @GetMapping("/contar/estado")
     @Operation(summary = "Contar reservas por estado")
-    public ResponseEntity<List<Reserva>> contarPorEstado(
+    public ResponseEntity<Long> contarPorEstado(
             @RequestParam @Parameter(description = "Estado de la reserva") String estado) {
-        return ResponseEntity.ok(reservaService.buscarPorEstado(String.valueOf(EstadoReserva.valueOf(estado.toUpperCase()))));
+        return ResponseEntity.ok(reservaService.countByEstado(estado));
     }
 }

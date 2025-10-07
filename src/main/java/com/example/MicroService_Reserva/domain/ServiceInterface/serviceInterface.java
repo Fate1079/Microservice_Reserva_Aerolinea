@@ -8,13 +8,13 @@ public interface serviceInterface {
 
     Iterable<ReservaDTO> getAllReservas();
 
-    ReservaDTO getReservaById(Long id);
+    ReservaDTO getReservaById(String id);
 
     ReservaDTO saveReserva(ReservaDTO reserva);
 
-    ReservaDTO updateReserva(Long id, ReservaDTO reserva);
+    ReservaDTO updateReserva(String id, ReservaDTO reserva);
 
-    void deleteReserva(Long id);
+    void deleteReserva(String id);
 
     long countReservas();
 

@@ -1,12 +1,11 @@
 package com.example.MicroService_Reserva.persistencia.service;
 
 import com.example.MicroService_Reserva.domain.dto.ReservaDTO;
-import com.example.MicroService_Reserva.persistencia.Entity.EstadoReserva;
 import com.example.MicroService_Reserva.persistencia.Entity.Reserva;
 import com.example.MicroService_Reserva.persistencia.Excepciones.ReservaInvalidaException;
 import com.example.MicroService_Reserva.persistencia.Excepciones.ReservaNoEncontradaException;
 import com.example.MicroService_Reserva.persistencia.Excepciones.ReservaYaActivaException;
-import com.example.MicroService_Reserva.persistencia.crudRepository.ReservaRepositorySi;
+import com.example.MicroService_Reserva.persistencia.crudRepository.ReservaCrudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +14,10 @@ import java.util.List;
 @Service
 public class ReservaService {
 
-    private final ReservaRepositorySi reservaRepository;
+    private final ReservaCrudRepository reservaRepository;
 
     @Autowired
-    public ReservaService(ReservaRepositorySi reservaRepository) {
+    public ReservaService(ReservaCrudRepository reservaRepository) {
         this.reservaRepository = reservaRepository;
     }
 
@@ -53,7 +52,7 @@ public class ReservaService {
         return reservaRepository.save(reserva);
     }
 
-    public Reserva findById(Long id) {
+    public Reserva findById(String id) {
         return reservaRepository.findById(id)
                 .orElseThrow(() -> new ReservaNoEncontradaException("No se encontró la reserva con ID: " + id));
     }
@@ -62,7 +61,7 @@ public class ReservaService {
         return (List<Reserva>) reservaRepository.findAll();
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         if (!reservaRepository.existsById(id)) {
             throw new ReservaNoEncontradaException("No se puede eliminar, la reserva con ID: " + id + " no existe");
         }
@@ -75,7 +74,7 @@ public class ReservaService {
     }
 
     public List<Reserva> buscarPorEstado(String estado) {
-        return reservaRepository.findByEstado(EstadoReserva.valueOf(estado));
+        return reservaRepository.findByEstado(estado);
     }
 
     public List<Reserva> buscarPorVuelo(String vuelo) {
@@ -87,8 +86,12 @@ public class ReservaService {
         return reservaRepository.count();
     }
 
-    public boolean existsById(Long id) {
+    public boolean existsById(String id) {
         return reservaRepository.existsById(id);
+    }
+
+    public long countByEstado(String estado) {
+        return reservaRepository.countByEstado(estado);
     }
 
     //aa//

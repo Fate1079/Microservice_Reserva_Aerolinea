@@ -14,8 +14,15 @@ import lombok.NoArgsConstructor;
 public class Reserva {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;   // identificador autogenerado
+    @Column(length = 36, nullable = false, updatable = false)
+    private String id;   // identificador generado como UUID
+
+    @PrePersist
+    private void prePersist() {
+        if (this.id == null || this.id.isBlank()) {
+            this.id = java.util.UUID.randomUUID().toString();
+        }
+    }
 
     @Column(nullable = false)
     private String usuario;   // nombre del usuario
